@@ -259,6 +259,95 @@ WHERE
     )
 ORDER BY 
     mh.TenMH;
+	--câu 10
+WITH TopHocBong AS (
+    SELECT top 1 NoiSinh
+    FROM SinhVien
+    WHERE MaKH = 'AV'
+    ORDER BY HocBong DESC
+)
+
+SELECT MaSV, HoSV, NoiSinh
+FROM SinhVien
+WHERE NoiSinh = (SELECT NoiSinh FROM TopHocBong);
+--câu 9
+WITH TongHocBongKH_Triet AS (
+    SELECT SUM(HocBong) AS TongHocBong
+    FROM SinhVien
+    WHERE MaKH = 'TR'
+)
+
+SELECT MaSV, HoSV+''+TenSV, HocBong
+FROM SinhVien
+WHERE HocBong > (SELECT TongHocBong FROM TongHocBongKH_Triet);
+-- câu 8
+WITH NgaySinhTreNhat_KH_AnhVan AS (
+    SELECT MIN(NgaySinh) AS NgaySinhTreNhat
+    FROM SinhVien
+    WHERE MaKH = 'AV'
+)
+
+SELECT MaSV,  HoSV+''+TenSV, NgaySinh
+FROM SinhVien
+WHERE NgaySinh > (SELECT NgaySinhTreNhat FROM NgaySinhTreNhat_KH_AnhVan);
+
+--câu 7
+WITH DiemDoHoaThapNhat_TinHoc AS (
+    SELECT MIN(Diem) AS DiemThapNhat
+    FROM KetQua
+    JOIN SinhVien ON KetQua.MaSV = SinhVien.MaSV
+    WHERE KetQua.MaMH = '04' AND SinhVien.MaKH = 'TH'
+)
+
+SELECT SinhVien.MaSV, SinhVien. HoSV+''+SinhVien.TenSV, KetQua.Diem
+FROM KetQua
+JOIN SinhVien ON KetQua.MaSV = SinhVien.MaSV
+WHERE KetQua.MaMH = '04'
+  AND KetQua.Diem < (SELECT DiemThapNhat FROM DiemDoHoaThapNhat_TinHoc);
+-- câu 5
+SELECT SinhVien.MaSV,SinhVien. HoSV+''+SinhVien.TenSV
+FROM SinhVien
+LEFT JOIN KetQua ON SinhVien.MaSV = KetQua.MaSV AND KetQua.MaMH = '01'
+WHERE SinhVien.MaKH = 'AV' AND KetQua.MaSV IS NULL;
+--câu 4
+SELECT Khoa.MaKH, Khoa.TenKH
+FROM Khoa
+LEFT JOIN SinhVien ON Khoa.MaKH = SinhVien.MaKH
+WHERE SinhVien.MaSV IS NULL;
+--câu 3
+SELECT MonHoc.MaMH, MonHoc.TenMH, MonHoc.SoTiet
+FROM MonHoc
+LEFT JOIN KetQua ON MonHoc.MaMH = KetQua.MaMH
+WHERE KetQua.MaMH IS NULL;
+--câu 2
+SELECT SinhVien.MaSV,SinhVien. HoSV+''+SinhVien.TenSV, SinhVien.MaKH
+FROM SinhVien
+LEFT JOIN KetQua ON SinhVien.MaSV = KetQua.MaSV AND KetQua.MaMH = '01'
+WHERE KetQua.MaMH IS NULL;
+--câu 1
+SELECT SinhVien.MaSV, SinhVien.MaKH, SinhVien.Phai
+FROM SinhVien
+LEFT JOIN KetQua ON SinhVien.MaSV = KetQua.MaSV
+WHERE KetQua.MaSV IS NULL;
+--câu 1 bài 8
+UPDATE MonHoc
+SET SoTiet = 45
+WHERE TenMH = 'Văn phạm';
+--câu 3
+UPDATE SinhVien
+SET Phai = '0'
+WHERE TenSV = 'Trần Thanh Kỳ';
+--câu 4
+UPDATE SinhVien
+SET NgaySinh = '1990-07-05'
+WHERE TenSV = 'Trần Thị Thu Thủy';
+--câu 5
+UPDATE SinhVien
+SET HocBong = HocBong + 100000
+WHERE MaKH = 'AV'; -- Giả sử 'AV' là mã khoa Anh văn
+
+
+
 --câu 6 bài 8
 UPDATE Ketqua
 SET Diem = LEAST(Diem + 5, 10)

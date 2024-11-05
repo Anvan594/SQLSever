@@ -1,0 +1,54 @@
+﻿use Lab32_QLSV_TVC
+--Bài 1
+--câu 1
+CREATE VIEW SinhVien_HocBong_Cao_HCM AS
+SELECT MaSV, TenSV, HocBong, NoiSinh
+FROM SinhVien
+WHERE HocBong > 100000 AND NoiSinh LIKE '%HCM%';
+
+SELECT * FROM SinhVien_HocBong_Cao_HCM;
+--câu 2
+CREATE VIEW Sinhvien_KhoaAnhVan_Triet AS
+SELECT MaSV,MaKH,Phai
+FROM SinhVien
+where MaKH='AV' or MaKH='TR';
+SELECT * FROM Sinhvien_KhoaAnhVan_Triet;
+--câu 3
+CREATE VIEW CAU3 AS
+SELECT MaSV,NgaySinh,NoiSinh,HocBong
+FROM SinhVien
+WHERE NgaySinh BETWEEN '1986-06-05' AND '1992-06-05'
+GO
+SELECT * FROM CAU3
+--CÂU 4
+CREATE  VIEW CAU4 AS
+SELECT MaSV,NgaySinh,Phai,MaKH
+FROM SinhVien
+WHERE HocBong BETWEEN 200000 AND 800000
+GO
+SELECT * FROM CAU4
+--CÂU 5
+CREATE VIEW CAU5 AS
+SELECT MaMH,TenMH,Sotiet
+FROM MonHoc
+WHERE Sotiet BETWEEN 40 AND 60 
+SELECT * FROM CAU5 
+-- CÂU 6
+CREATE  VIEW CAU6 AS
+SELECT MaSV,HoSV+''+TenSV AS [Họ tên sinh viên],
+	CASE 
+		WHEN Phai = 0 THEN 'NAM'
+	END AS PHAI
+FROM SinhVien
+WHERE Phai=0
+GO
+SELECT*FROM CAU6
+--CAU7
+DROP VIEW CAU7
+CREATE VIEW CAU7 AS
+SELECT HoSV AS[ Họ sinh viên],TenSV[Tên sinh viên],NoiSinh[Nơi sinh],CONVERT(VARCHAR, NgaySinh, 103)AS [Ngày sinh]
+FROM SinhVien
+WHERE NoiSinh = N'Hà Nội' AND CONVERT(VARCHAR, NgaySinh, 103) > '01/01/1990'
+GO
+
+SELECT * FROM CAU7
